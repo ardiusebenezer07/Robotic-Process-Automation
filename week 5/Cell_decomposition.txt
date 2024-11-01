@@ -1,0 +1,162 @@
+import numpy as np
+from typing import List, Tuple, Set
+import matplotlib.pyplot as plt
+from queue import Queue
+
+class CellDecomposition:
+    def __init__(self, width: int, height: int, cell_size: int):
+        self.width = width
+        self.height = height
+        self.cell_size = cell_size
+        
+        # Menghitung jumlah cell pada setiap dimensi
+        self.grid_width = width // cell_size
+        self.grid_height = height // cell_size
+        
+        # Inisialisasi grid
+        self.grid = np.zeros((self.grid_height, self.grid_width))
+        
+        # Menyimpan informasi connectivity antar cell
+        self.adjacency_list = {}
+        
+    def add_obstacle(self, x: int, y: int, w: int, h: int):
+        """
+        Menambahkan rintangan ke dalam grid
+        """
+        # Konversi koordinat ke indeks cell
+        start_x = max(0, x // self.cell_size)
+        start_y = max(0, y // self.cell_size)
+        end_x = min(self.grid_width, (x + w) // self.cell_size + 1)
+        end_y = min(self.grid_height, (y + h) // self.cell_size + 1)
+        
+        # Tandai cell yang terisi rintangan
+        self.grid[start_y:end_y, start_x:end_x] = 1
+        
+    def build_adjacency_list(self):
+        """
+        Membangun adjacency list untuk connectivity antar cell
+        """
+        for y in range(self.grid_height):
+            for x in range(self.grid_width):
+                if self.grid[y, x] == 0:  # Jika cell kosong
+                    self.adjacency_list[(x, y)] = set()
+                    
+                    # Cek 8 tetangga
+                    directions = [(-1,-1), (-1,0), (-1,1), (0,-1), 
+                                (0,1), (1,-1), (1,0), (1,1)]
+                    
+                    for dx, dy in directions:
+                        new_x, new_y = x + dx, y + dy
+                        if (0 <= new_x < self.grid_width and 
+                            0 <= new_y < self.grid_height and 
+                            self.grid[new_y, new_x] == 0):
+                            self.adjacency_list[(x, y)].add((new_x, new_y))
+    
+    def find_path(self, start: Tuple[int, int], goal: Tuple[int, int]) -> List[Tuple[int, int]]:
+        """
+        Mencari jalur dari start ke goal menggunakan BFS
+        """
+        # Konversi koordinat ke indeks cell
+        start_cell = (start[0] // self.cell_size, start[1] // self.cell_size)
+        goal_cell = (goal[0] // self.cell_size, goal[1] // self.cell_size)
+        
+        # Cek apakah start dan goal valid
+        if (self.grid[start_cell[1], start_cell[0]] == 1 or 
+            self.grid[goal_cell[1], goal_cell[0]] == 1):
+            return []
+        
+        # Inisialisasi BFS
+        queue = Queue()
+        queue.put(start_cell)
+        visited = {start_cell: None}  # Untuk merekonstruksi jalur
+        
+        # BFS
+        while not queue.empty():
+            current = queue.get()
+            
+            if current == goal_cell:
+                # Rekonstruksi jalur
+                path = []
+                while current is not None:
+                    path.append(current)
+                    current = visited[current]
+                path.reverse()
+                
+                # Konversi kembali ke koordinat dunia
+                return [(x * self.cell_size + self.cell_size//2, 
+                        y * self.cell_size + self.cell_size//2) 
+                       for x, y in path]
+            
+            # Eksplorasi tetangga
+            for next_cell in self.adjacency_list.get(current, []):
+                if next_cell not in visited:
+                    queue.put(next_cell)
+                    visited[next_cell] = current
+        
+        return []  # Tidak ditemukan jalur
+    
+    def visualize(self, path: List[Tuple[int, int]] = None):
+        """
+        Memvisualisasikan decomposition dan jalur
+        """
+        plt.figure(figsize=(10, 10))
+        
+        # Gambar grid
+        plt.imshow(self.grid, cmap='binary')
+        
+        # Gambar garis grid
+        for x in range(self.grid_width):
+            plt.axvline(x - 0.5, color='gray', linewidth=0.5)
+        for y in range(self.grid_height):
+            plt.axhline(y - 0.5, color='gray', linewidth=0.5)
+        
+        # Gambar jalur jika ada
+        if path:
+            path_x = [x/self.cell_size for x, _ in path]
+            path_y = [y/self.cell_size for _, y in path]
+            plt.plot(path_x, path_y, 'r-', linewidth=2, label='Path')
+            
+            # Tandai start dan goal
+            plt.plot(path_x[0], path_y[0], 'go', label='Start')
+            plt.plot(path_x[-1], path_y[-1], 'ro', label='Goal')
+        
+        plt.grid(True)
+        plt.legend()
+        plt.title('Cell Decomposition with Path')
+        plt.show()
+
+# Contoh penggunaan
+if __name__ == "__main__":
+    # Inisialisasi environment
+    env = CellDecomposition(width=500, height=500, cell_size=50)
+    
+    # Tambahkan beberapa rintangan
+    obstacles = [
+        (100, 100, 100, 100),  # (x, y, width, height)
+        (300, 200, 100, 200),
+        (100, 300, 200, 50),
+    ]
+    
+    for obs in obstacles:
+        env.add_obstacle(*obs)
+    
+    # Build adjacency list
+    env.build_adjacency_list()
+    
+    # Tentukan titik start dan goal
+    start_point = (50, 50)
+    goal_point = (450, 450)
+    
+    # Cari jalur
+    path = env.find_path(start_point, goal_point)
+    
+    if path:
+        print("Jalur ditemukan:")
+        print(f"Jumlah waypoint: {len(path)}")
+        print("Waypoints:", path)
+        
+        # Visualisasi
+        env.visualize(path)
+    else:
+        print("Tidak ditemukan jalur ke tujuan")
+        env.visualize()
