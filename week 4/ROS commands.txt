@@ -1,0 +1,41 @@
+Install MovieIt 
+-rosdep update
+-sudo apt update
+-sudo apt dist-upgrade
+-sudo apt install ros-noetic-catkin python3-catkin-tools
+-sudo apt install python3-wstool
+-mkdir -p ~/ws_moveit/src
+-cd ~/ws_moveit/src
+-wstool init .
+-wstool merge -t . https://raw.githubusercontent.com/moveit/moveit/master/moveit.rosinstall
+-wstool remove moveit_tutorials  
+-wstool update -t 
+-cd ~/ws_moveit/src
+-git clone https://github.com/moveit/moveit_tutorials.git -b master
+-git clone https://github.com/moveit/panda_moveit_config.git -b noetic-devel
+-cd ~/ws_moveit/src
+-rosdep install -y --from-paths . --ignore-src --rosdistro noetic
+-sudo sh -c 'echo "deb http://packages.ros.org/ros-testing/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list'
+-sudo apt update
+-cd ~/ws_moveit
+-catkin config --extend /opt/ros/${ROS_DISTRO} --cmake-args -DCMAKE_BUILD_TYPE=Release
+-catkin build
+-source ~/ws_moveit/devel/setup.bash
+-echo 'source ~/ws_moveit/devel/setup.bash' >> ~/.bashrc
+
+Move Group C++ & Python Interface
+-roslaunch panda_moveit_config demo.launch
+-roslaunch moveit_tutorials move_group_interface_tutorial.launch
+
+MoveIt Commander Scripting
+-roslaunch panda_moveit_config demo.launch
+-rosrun moveit_commander moveit_commander_cmdline.py
+-use panda_arm
+-current
+-rec c
+
+Pick and Place
+-roslaunch panda_moveit_config demo.launch
+-rosrun moveit_tutorials pick_place_tutorial
+
+
