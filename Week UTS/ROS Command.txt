@@ -1,0 +1,7 @@
+cd ~/catkin_ws/src
+git clone https://github.com/sakthibalanv/TurtleSim_Snake_Game.git
+cd ~/catkin_ws
+catkin_make
+source devel/setup.bash
+
+roslaunch turtle_snake_game start.launch
