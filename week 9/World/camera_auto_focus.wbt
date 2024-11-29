@@ -1,0 +1,262 @@
+#VRML_SIM R2023b utf8
+
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/backgrounds/protos/TexturedBackground.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/backgrounds/protos/TexturedBackgroundLight.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/floors/protos/RectangleArena.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/drinks/protos/Can.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/fruits/protos/Apple.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/school_furniture/protos/Book.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/obstacles/protos/OilBarrel.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/balls/protos/SoccerBall.proto"
+
+WorldInfo {
+  info [
+    "Example use of a color Camera device with auto-focusing capabilities."
+  ]
+  title "Camera With Auto-Focus"
+}
+Viewpoint {
+  orientation -0.31201884600605123 0.2791770423143426 0.9081323795469843 1.712070408418439
+  position 0.03761810127163649 -1.1048611925112735 0.998687117170863
+}
+TexturedBackground {
+}
+TexturedBackgroundLight {
+}
+RectangleArena {
+  floorTileSize 0.25 0.25
+  wallHeight 0.15
+  wallAppearance PBRAppearance {
+    baseColorMap ImageTexture {
+      url [
+        "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/default/worlds/textures/red_brick_wall.jpg"
+      ]
+    }
+    roughness 1
+    metalness 0
+    textureTransform TextureTransform {
+      scale 6 7
+    }
+  }
+}
+Robot {
+  translation -0.0035600002550464976 0.007739999600423105 -0.00023918932497233453
+  rotation 0.00030517663654720264 0.0001663564180244844 0.9999999395963796 -2.141595066562867
+  children [
+    Pose {
+      translation 0 0 0.0415
+      rotation 0 0 1 -1.570796
+      children [
+        Shape {
+          appearance PBRAppearance {
+            baseColor 0.0820075 0.364731 0.8
+            roughness 1
+            metalness 0
+          }
+          geometry DEF BODY Cylinder {
+            height 0.08
+            radius 0.045
+          }
+        }
+      ]
+    }
+    HingeJoint {
+      jointParameters HingeJointParameters {
+        position 1.785530996290753e-07
+        axis 0 1 0
+        anchor 0 0 0.025
+      }
+      device [
+        RotationalMotor {
+          name "left wheel motor"
+          consumptionFactor 70
+        }
+        PositionSensor {
+          name "left wheel sensor"
+        }
+      ]
+      endPoint Solid {
+        translation 0 0.045 0.025
+        rotation 0.1344868683238876 -0.13448686832386433 -0.9817466905963437 1.5892169759869452
+        children [
+          DEF WHEEL Pose {
+            rotation 0.577656895078166 0.5771968951617173 -0.5771968951617173 -2.093935
+            children [
+              Shape {
+                appearance PBRAppearance {
+                  baseColor 1 0 0
+                  roughness 1
+                  metalness 0
+                }
+                geometry Cylinder {
+                  height 0.01
+                  radius 0.025
+                }
+              }
+            ]
+          }
+        ]
+        name "left wheel"
+        boundingObject USE WHEEL
+        physics DEF PHYSICS_WHEEL Physics {
+          density -1
+          mass 0.05
+        }
+        linearVelocity 5.419207812651287e-05 8.4394118329086e-05 -1.3651784691855745e-06
+        angularVelocity -0.003375827176804958 0.0021676692136641095 -9.584262459976246e-07
+      }
+    }
+    HingeJoint {
+      jointParameters HingeJointParameters {
+        position -1.7854977496511992e-07
+        axis 0 1 0
+        anchor 0 0 0.025
+      }
+      device [
+        RotationalMotor {
+          name "right wheel motor"
+          consumptionFactor 70
+        }
+        PositionSensor {
+          name "right wheel sensor"
+        }
+      ]
+      endPoint Solid {
+        translation 0 -0.045 0.025
+        rotation -0.06235691236298085 0.06235691236298876 -0.9961040261745308 1.5746999888661792
+        children [
+          USE WHEEL
+        ]
+        name "right wheel"
+        boundingObject USE WHEEL
+        physics USE PHYSICS_WHEEL
+        linearVelocity 5.423804959707355e-05 8.446978730037239e-05 -1.3602448920125252e-06
+        angularVelocity -0.0033788324162042404 0.0021696022675223147 -9.579237678705867e-07
+      }
+    }
+    DistanceSensor {
+      translation 0.04 0 0.0915
+      lookupTable [
+        0 0 0
+        1 1000 0
+      ]
+    }
+    DEF SMILE Pose {
+      translation 0.036 0 0.025
+      rotation 0.25056300542381216 -0.9351130202419243 -0.25056300542381216 1.637834
+      children [
+        Shape {
+          appearance PBRAppearance {
+            baseColor 0.721569 0.290196 0.290196
+            roughness 1
+            metalness 0
+          }
+          geometry Cylinder {
+            height 0.018
+            radius 0.009
+            subdivision 3
+          }
+        }
+      ]
+    }
+    Camera {
+      translation 0.04 0 0.0915
+      children [
+        Pose {
+          translation -0.015 0 0
+          rotation -0.5771968951617173 -0.577656895078166 -0.5771968951617173 -2.093935
+          children [
+            Shape {
+              appearance PBRAppearance {
+                roughness 1
+                metalness 0
+              }
+              geometry Cylinder {
+                height 0.03
+                radius 0.01
+              }
+            }
+          ]
+        }
+      ]
+      fieldOfView 1
+      width 400
+      height 300
+      focus Focus {
+        focalDistance 0.516532689268457
+        focalLength 0.25
+        maxFocalDistance 1
+        minFocalDistance 0.1
+      }
+    }
+    DEF RIGHT_EYE Pose {
+      translation 0.042 0.02 0.063
+      rotation 0.3871000691202075 0.6519791164167495 0.6519791164167495 2.40292
+      children [
+        Shape {
+          appearance PBRAppearance {
+            baseColor 0.975691 0.981481 0.0252992
+            roughness 1
+            metalness 0
+          }
+          geometry Cylinder {
+            height 0.004
+            radius 0.008
+          }
+        }
+      ]
+    }
+    DEF LEFT_EYE Pose {
+      translation 0.042 -0.02 0.063
+      rotation 0.7664071928227091 0.45421311427685446 0.45421411427710606 1.83375
+      children [
+        Shape {
+          appearance PBRAppearance {
+            baseColor 0.975691 0.981481 0.0252992
+            roughness 1
+            metalness 0
+          }
+          geometry Cylinder {
+            height 0.004
+            radius 0.008
+          }
+        }
+      ]
+    }
+  ]
+  name "MyBot"
+  boundingObject Pose {
+    translation 0 0 0.0415
+    rotation 0 0 1 -1.570796
+    children [
+      USE BODY
+    ]
+  }
+  physics Physics {
+    density -1
+    mass 0.5
+  }
+  controller "camera_auto_focus"
+  linearVelocity 8.999669853317684e-05 0.00014015654904474536 -1.425932804579324e-06
+  angularVelocity -0.0033773298537309307 0.002168635777449867 -9.581748047102776e-07
+}
+Can {
+  translation 0.28 1.6163437824185985e-19 0.06096171086093549
+  rotation 3.3266256689820176e-17 -1.26456802543123e-17 1 -3.1415849999999996
+}
+Apple {
+  translation -0.26 0 0.049764791394518226
+}
+Book {
+  translation -0.08660299999999999 -0.29 0.09988239614048448
+  rotation 3.446857946835864e-17 -2.934637512024818e-17 1 2.3562
+}
+OilBarrel {
+  translation 0.143119 -0.169397 0.075
+  rotation 0 0 1 1.5708
+  height 0.2
+  radius 0.05
+}
+SoccerBall {
+  translation 0 0.29 0.11205723158604528
+}
