@@ -1,0 +1,61 @@
+git clone https://github.com/PacktPublishing/Mastering-ROS-for-Robotics-Programming-Third-edition.git
+cd ~/catkin_ws/src
+cp -r ~/Documents/Mastering-ROS-for-Robotics-Programming-Third-edition/Chapter2/mastering_ros_demo_pkg .#menyalin ke workspace
+tutorial 1
+cd ~/catkin_ws
+catkin_make
+source devel/setup.bash
+terminal 2
+roscore
+terminal 3
+source ~/catkin_ws/devel/setup.bash
+rosrun mastering_ros_demo_pkg demo_topic_publisher
+terminal 4
+source ~/catkin_ws/devel/setup.bash
+rosrun mastering_ros_demo_pkg demo_topic_subscriber
+terminal 3
+source ~/catkin_ws/devel/setup.bash
+rosrun mastering_ros_demo_pkg demo_msg_publisher
+terminal 4
+source ~/catkin_ws/devel/setup.bash
+rosrun mastering_ros_demo_pkg demo_msg_subscriber
+terminal 3
+source ~/catkin_ws/devel/setup.bash
+rosrun mastering_ros_demo_pkg demo_action_server
+terminal 4
+source ~/catkin_ws/devel/setup.bash
+rosrun mastering_ros_demo_pkg demo_action_client 10 1
+
+chapter 3
+cd ~/catkin_ws/src
+cp -r ~/Documents/Mastering-ROS-for-Robotics-Programming-Third-edition/Chapter3/* .
+cd ~/catkin_ws
+catkin_make
+source ~/catkin_ws/devel/setup.bash
+roslaunch mastering_ros_robot_description_pkg view_demo.launch
+source ~/catkin_ws/devel/setup.bash
+roslaunch mastering_ros_robot_description_pkg view_arm.launch
+
+Chpter 4
+terminal 1
+cd ~/catkin_ws/src
+roslaunch seven_dof_arm_gazebo seven_dof_arm_gazebo_control.launch
+terminal 2
+rostopic pub /seven_dof_arm/joint4_position_controller/command std_msgs/Float64 "data: 1.0"
+terminal 1
+roslaunch diff_wheeled_robot_gazebo diff_wheeled_gazebo.launch
+terminal 2
+roslaunch diff_wheeled_robot_control keyboard_teleop.launch 
+
+chapter 6 
+cd ~/catkin_ws/src
+source ~/catkin_ws/devel/setup.bash
+roslaunch diff_wheeled_robot_gazebo diff_wheeled_gazebo_full.launch
+source ~/catkin_ws/devel/setup.bash
+roslaunch diff_wheeled_robot_gazebo gmapping.launch
+source ~/catkin_ws/devel/setup.bash
+roslaunch diff_wheeled_robot_control keyboard_teleop.launch 
+rviz
+source ~/catkin_ws/devel/setup.bash
+rosrun map_server map_saver -f plaza
+
